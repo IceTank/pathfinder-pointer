@@ -3,7 +3,7 @@ const { GoalBlock } = require('mineflayer-pathfinder').goals
 
 function inject (bot) {
   bot.pointer = {}
-  bot.pointer.isOn = false
+  bot.pointer.isOn = true
   bot.pointer.togglePointer = function () {
     bot.pointer.isOn = !bot.pointer.isOn
     return 'Pointer now ' + bot.pointer.isOn ? 'On' : 'Off'
@@ -43,7 +43,6 @@ function inject (bot) {
     }
     bot.pathfinder.setGoal(
       new GoalBlock(rayBlock.position.x, rayBlock.position.y + 1, rayBlock.position.z))
-    bot.isMoving = true
     bot.whisper(entity.username, `Going to ${JSON.stringify(rayBlock.position)}`)
   }
 
@@ -53,6 +52,7 @@ function inject (bot) {
 }
 
 function packetHandler (data, meta, bot) {
+  if (!bot.pointer.isOn) return
   if (meta.name !== 'animation') return
   if (data.animation !== 0) return
   bot.pointer.entityClick(data.entityId)
